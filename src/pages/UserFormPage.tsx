@@ -93,7 +93,7 @@ export function UserFormPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg shadow-slate-950/40 sm:p-6">
+      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg shadow-slate-950/40 sm:p-6">
         <UserForm
           key={userId ?? 'create'}
           initialValues={initialValues}

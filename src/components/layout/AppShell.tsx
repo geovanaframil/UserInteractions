@@ -5,13 +5,13 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 antialiased">
       <header className="border-b border-slate-800 bg-slate-950/90 shadow-sm backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <div className="space-y-0.5">
+        <div className="mx-auto flex max-w-5xl flex-col gap-4 px-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-4">
+          <div className="min-w-0 space-y-0.5">
             <p className="text-xs font-semibold uppercase tracking-wide text-indigo-400">Teste Técnico</p>
-            <h1 className="text-lg font-semibold text-slate-100">Cadastro de Usuários</h1>
+            <h1 className="truncate text-base font-semibold text-slate-100 sm:text-lg">Cadastro de Usuários</h1>
           </div>
 
-          <nav className="flex items-center gap-2">
+          <nav className="flex shrink-0 items-center gap-2 sm:justify-end">
             <NavLink
               to="/users"
               className={({ isActive }) =>
@@ -29,7 +29,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-5xl px-3 py-6 pb-10 sm:px-4 sm:py-8 max-sm:pb-[max(2.5rem,env(safe-area-inset-bottom))]">
+        {children}
+      </main>
     </div>
   )
 }

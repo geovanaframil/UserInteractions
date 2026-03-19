@@ -9,4 +9,6 @@ body,
 body {
   margin: 0;
   background: #020617;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }

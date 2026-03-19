@@ -98,12 +98,12 @@ export function UserForm({
         />
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
-        <Button variant="secondary" type="button" onClick={onCancel}>
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <Button variant="secondary" type="button" onClick={onCancel} className="w-full sm:w-auto">
           Voltar
         </Button>
 
-        <Button variant="primary" type="submit" isLoading={submitting}>
+        <Button variant="primary" type="submit" isLoading={submitting} className="w-full sm:w-auto">
           {submitLabel}
         </Button>
       </div>

@@ -39,17 +39,27 @@ export function UsersListPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h2 className="text-xl font-semibold text-slate-100">Usuários</h2>
           <p className="text-sm text-slate-400">Listagem e edição de usuários cadastrados.</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" onClick={() => void refresh()} type="button">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:justify-end">
+          <Button
+            variant="secondary"
+            onClick={() => void refresh()}
+            type="button"
+            className="w-full sm:w-auto"
+          >
             Recarregar
           </Button>
-          <Button variant="primary" onClick={() => navigate('/users/new')} type="button">
+          <Button
+            variant="primary"
+            onClick={() => navigate('/users/new')}
+            type="button"
+            className="w-full sm:w-auto"
+          >
             Novo usuário
           </Button>
         </div>
