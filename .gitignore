@@ -38,6 +38,5 @@ db-*.json
 .env.test.local
 .env.test.development
 .env.test.production
-.env*
 
 
