@@ -1,0 +1,76 @@
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Spinner } from '../components/ui/Spinner'
+import { FormError } from '../components/ui/FormError'
+import { UsersTable } from '../components/users/UsersTable'
+import { Button } from '../components/ui/Button'
+import { useUsersContext } from '../contexts/useUsersContext'
+import { toast } from 'react-hot-toast'
+
+export function UsersListPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { users, loading, error, refresh, deleteUser } = useUsersContext()
+
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [isDeletingId, setIsDeletingId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const state = location.state as { successToast?: string } | null
+    if (!state?.successToast) return
+
+    toast.success(state.successToast, { id: 'user-form-success' })
+    navigate(location.pathname, { replace: true, state: null })
+  }, [location.pathname, location.state, navigate])
+
+  async function handleDelete(id: number) {
+    setDeleteError(null)
+    setIsDeletingId(id)
+    try {
+      await deleteUser(id)
+      toast.success('Usuário removido com sucesso!', { id: `user-delete-${id}` })
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro ao remover usuário.'
+      setDeleteError(msg)
+    } finally {
+      setIsDeletingId(null)
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-slate-900">Usuários</h2>
+          <p className="text-sm text-slate-600">Listagem e edição de usuários cadastrados.</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" onClick={() => void refresh()} type="button">
+            Recarregar
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => navigate('/users/new')}
+            type="button"
+            className="hidden sm:inline-flex"
+          >
+            Novo usuário
+          </Button>
+        </div>
+      </div>
+
+      {error ? <FormError message={error} /> : null}
+      {deleteError ? <FormError message={deleteError} /> : null}
+
+      {loading ? (
+        <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <Spinner />
+        </div>
+      ) : (
+        <UsersTable users={users} onDelete={handleDelete} isDeletingId={isDeletingId} />
+      )}
+    </div>
+  )
+}
+
