@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { Button } from '../ui/Button'
+import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { FormError } from '../ui/FormError'
 import { TextField } from '../ui/TextField'
 import { validateUser } from '../../types/userValidation'
@@ -14,19 +15,42 @@ export function UserForm({
   submitLabel,
   onCancel,
   onSubmit,
+  requireSubmitConfirmation = false,
+  submitConfirmTitle = 'Confirmar alterações',
+  submitConfirmDescription = (
+    <>
+      Deseja salvar as alterações neste usuário? Verifique os dados antes de continuar.
+    </>
+  ),
 }: {
   initialValues: UserFormValues
   submitLabel: string
   onCancel: () => void
   onSubmit: (values: UserFormValues) => Promise<void>
+  /** Quando true, abre um modal de confirmação antes de enviar (ex.: edição). */
+  requireSubmitConfirmation?: boolean
+  submitConfirmTitle?: string
+  submitConfirmDescription?: ReactNode
 }) {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [submitDialogOpen, setSubmitDialogOpen] = useState(false)
 
   const form = useUserForm({
     initialValues,
     validate: validateUser,
   })
+
+  async function performSubmit() {
+    setSubmitting(true)
+    try {
+      await onSubmit(form.values)
+    } catch (err) {
+      setSubmitError(usersApi.getAxiosErrorMessage(err))
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -35,11 +59,23 @@ export function UserForm({
     const ok = form.validateAll()
     if (!ok) return
 
+    if (requireSubmitConfirmation) {
+      setSubmitDialogOpen(true)
+      return
+    }
+
+    await performSubmit()
+  }
+
+  async function handleConfirmSubmit() {
+    setSubmitError(null)
     setSubmitting(true)
     try {
       await onSubmit(form.values)
+      setSubmitDialogOpen(false)
     } catch (err) {
       setSubmitError(usersApi.getAxiosErrorMessage(err))
+      setSubmitDialogOpen(false)
     } finally {
       setSubmitting(false)
     }
@@ -103,10 +139,30 @@ export function UserForm({
           Voltar
         </Button>
 
-        <Button variant="primary" type="submit" isLoading={submitting} className="w-full sm:w-auto">
+        <Button
+          variant="primary"
+          type="submit"
+          isLoading={submitting && !submitDialogOpen}
+          className="w-full sm:w-auto"
+        >
           {submitLabel}
         </Button>
       </div>
+
+      <ConfirmDialog
+        open={submitDialogOpen}
+        title={submitConfirmTitle}
+        description={submitConfirmDescription}
+        confirmLabel={submitLabel}
+        cancelLabel="Cancelar"
+        confirmVariant="primary"
+        isConfirming={submitting && submitDialogOpen}
+        onClose={() => {
+          if (submitting) return
+          setSubmitDialogOpen(false)
+        }}
+        onConfirm={handleConfirmSubmit}
+      />
     </form>
   )
 }

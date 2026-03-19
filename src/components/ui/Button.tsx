@@ -3,12 +3,15 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react'
 type Props = {
   variant?: 'primary' | 'secondary' | 'danger'
   isLoading?: boolean
+  /** Texto exibido enquanto `isLoading` é true (padrão: “Salvando...”) */
+  loadingLabel?: string
   leftIcon?: ReactNode
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 export function Button({
   variant = 'primary',
   isLoading = false,
+  loadingLabel = 'Salvando...',
   leftIcon,
   disabled,
   className = '',
@@ -36,7 +39,7 @@ export function Button({
       className={[base, variants[variant], className].join(' ')}
     >
       {leftIcon}
-      {isLoading ? 'Salvando...' : children}
+      {isLoading ? loadingLabel : children}
     </button>
   )
 }

@@ -6,11 +6,11 @@ import { HiOutlineTrash } from 'react-icons/hi2'
 
 function UserActions({
   user,
-  onDelete,
+  onRequestDelete,
   isDeletingId,
 }: {
   user: User
-  onDelete?: (id: number) => Promise<void>
+  onRequestDelete?: (id: number) => void
   isDeletingId: number | null
 }) {
   return (
@@ -23,11 +23,11 @@ function UserActions({
       >
         <FiEdit2 size={16} />
       </Link>
-      {onDelete ? (
+      {onRequestDelete ? (
         <Button
           variant="danger"
           disabled={isDeletingId === user.id}
-          onClick={async () => onDelete(user.id)}
+          onClick={() => onRequestDelete(user.id)}
           className="h-9 w-9 px-0 py-0"
           aria-label={`Remover ${user.name}`}
           title="Remover"
@@ -45,11 +45,11 @@ function UserActions({
 
 function UserCard({
   user,
-  onDelete,
+  onRequestDelete,
   isDeletingId,
 }: {
   user: User
-  onDelete?: (id: number) => Promise<void>
+  onRequestDelete?: (id: number) => void
   isDeletingId: number | null
 }) {
   return (
@@ -59,7 +59,7 @@ function UserCard({
           <h3 className="truncate font-semibold text-slate-100">{user.name}</h3>
           <p className="mt-0.5 break-all text-sm text-slate-400">{user.email}</p>
         </div>
-        <UserActions user={user} onDelete={onDelete} isDeletingId={isDeletingId} />
+        <UserActions user={user} onRequestDelete={onRequestDelete} isDeletingId={isDeletingId} />
       </div>
       <dl className="mt-4 grid grid-cols-1 gap-3 border-t border-slate-800 pt-4 text-sm sm:grid-cols-2">
         <div>
@@ -77,11 +77,11 @@ function UserCard({
 
 export function UsersTable({
   users,
-  onDelete,
+  onRequestDelete,
   isDeletingId,
 }: {
   users: User[]
-  onDelete?: (id: number) => Promise<void>
+  onRequestDelete?: (id: number) => void
   isDeletingId?: number | null
 }) {
   const deleting = isDeletingId ?? null
@@ -99,7 +99,7 @@ export function UsersTable({
       {/* Mobile / tablet: cards */}
       <div className="space-y-3 lg:hidden">
         {users.map((u) => (
-          <UserCard key={u.id} user={u} onDelete={onDelete} isDeletingId={deleting} />
+          <UserCard key={u.id} user={u} onRequestDelete={onRequestDelete} isDeletingId={deleting} />
         ))}
       </div>
 
@@ -123,7 +123,7 @@ export function UsersTable({
                 <td className="px-4 py-3.5 text-slate-300">{u.phone}</td>
                 <td className="px-4 py-3.5 text-slate-300">{u.city}</td>
                 <td className="px-4 py-3.5">
-                  <UserActions user={u} onDelete={onDelete} isDeletingId={deleting} />
+                  <UserActions user={u} onRequestDelete={onRequestDelete} isDeletingId={deleting} />
                 </td>
               </tr>
             ))}

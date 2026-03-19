@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Spinner } from '../components/ui/Spinner'
 import { FormError } from '../components/ui/FormError'
+import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { UsersTable } from '../components/users/UsersTable'
 import { Button } from '../components/ui/Button'
 import { useUsersContext } from '../contexts/useUsersContext'
@@ -14,6 +15,10 @@ export function UsersListPage() {
 
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [isDeletingId, setIsDeletingId] = useState<number | null>(null)
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null)
+
+  const pendingDeleteUser =
+    deleteConfirmId != null ? users.find((u) => u.id === deleteConfirmId) : undefined
 
   useEffect(() => {
     const state = location.state as { successToast?: string } | null
@@ -23,12 +28,13 @@ export function UsersListPage() {
     navigate(location.pathname, { replace: true, state: null })
   }, [location.pathname, location.state, navigate])
 
-  async function handleDelete(id: number) {
+  async function executeDelete(id: number) {
     setDeleteError(null)
     setIsDeletingId(id)
     try {
       await deleteUser(id)
       toast.success('Usuário removido com sucesso!', { id: `user-delete-${id}` })
+      setDeleteConfirmId(null)
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Erro ao remover usuário.'
       setDeleteError(msg)
@@ -73,8 +79,42 @@ export function UsersListPage() {
           <Spinner />
         </div>
       ) : (
-        <UsersTable users={users} onDelete={handleDelete} isDeletingId={isDeletingId} />
+        <UsersTable
+          users={users}
+          onRequestDelete={(id) => setDeleteConfirmId(id)}
+          isDeletingId={isDeletingId}
+        />
       )}
+
+      <ConfirmDialog
+        open={deleteConfirmId !== null}
+        title="Remover usuário?"
+        description={
+          <>
+            Tem certeza que deseja remover{' '}
+            <strong className="text-slate-200">
+              {pendingDeleteUser?.name ?? 'este usuário'}
+            </strong>
+            ?
+            <span className="mt-3 block text-slate-400">
+              Esta ação é <strong className="text-rose-300">irreversível</strong> e não pode ser desfeita.
+            </span>
+          </>
+        }
+        confirmLabel="Remover"
+        cancelLabel="Cancelar"
+        confirmVariant="danger"
+        confirmLoadingLabel="Removendo..."
+        isConfirming={deleteConfirmId !== null && isDeletingId === deleteConfirmId}
+        onClose={() => {
+          if (deleteConfirmId !== null && isDeletingId === deleteConfirmId) return
+          setDeleteConfirmId(null)
+        }}
+        onConfirm={async () => {
+          if (deleteConfirmId == null) return
+          await executeDelete(deleteConfirmId)
+        }}
+      />
     </div>
   )
 }

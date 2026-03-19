@@ -98,6 +98,7 @@ export function UserFormPage() {
           key={userId ?? 'create'}
           initialValues={initialValues}
           submitLabel={userId ? 'Salvar alterações' : 'Cadastrar'}
+          requireSubmitConfirmation={Boolean(userId)}
           onCancel={() => navigate('/users')}
           onSubmit={handleSubmit}
         />
