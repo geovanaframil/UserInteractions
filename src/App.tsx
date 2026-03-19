@@ -13,10 +13,10 @@ export default function App() {
           toastOptions={{
             duration: 3000,
             style: {
-              border: '1px solid #e2e8f0',
+              border: '1px solid rgba(71, 85, 105, 0.5)',
               padding: '12px 14px',
-              color: '#0f172a',
-              background: '#ffffff',
+              color: '#e2e8f0',
+              background: '#0f172a',
             },
           }}
           containerStyle={{ zIndex: 99999 }}

@@ -41,20 +41,15 @@ export function UsersListPage() {
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Usuários</h2>
-          <p className="text-sm text-slate-600">Listagem e edição de usuários cadastrados.</p>
+          <h2 className="text-xl font-semibold text-slate-100">Usuários</h2>
+          <p className="text-sm text-slate-400">Listagem e edição de usuários cadastrados.</p>
         </div>
 
         <div className="flex items-center gap-3">
           <Button variant="secondary" onClick={() => void refresh()} type="button">
             Recarregar
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => navigate('/users/new')}
-            type="button"
-            className="hidden sm:inline-flex"
-          >
+          <Button variant="primary" onClick={() => navigate('/users/new')} type="button">
             Novo usuário
           </Button>
         </div>
@@ -64,7 +59,7 @@ export function UsersListPage() {
       {deleteError ? <FormError message={deleteError} /> : null}
 
       {loading ? (
-        <div className="rounded-lg border border-slate-200 bg-white p-6">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6 shadow-lg shadow-slate-950/40">
           <Spinner />
         </div>
       ) : (

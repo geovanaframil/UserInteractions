@@ -72,7 +72,7 @@ export function UserFormPage() {
 
   if (loading) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-6">
+      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-6 shadow-lg shadow-slate-950/40">
         <Spinner />
       </div>
     )
@@ -85,21 +85,23 @@ export function UserFormPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-slate-900">
+        <h2 className="text-xl font-semibold text-slate-100">
           {userId ? 'Editar usuário' : 'Cadastrar usuário'}
         </h2>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-400">
           Preencha os campos com atenção. Todos os campos são obrigatórios.
         </p>
       </div>
 
-      <UserForm
-        key={userId ?? 'create'}
-        initialValues={initialValues}
-        submitLabel={userId ? 'Salvar alterações' : 'Cadastrar'}
-        onCancel={() => navigate('/users')}
-        onSubmit={handleSubmit}
-      />
+      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg shadow-slate-950/40 sm:p-6">
+        <UserForm
+          key={userId ?? 'create'}
+          initialValues={initialValues}
+          submitLabel={userId ? 'Salvar alterações' : 'Cadastrar'}
+          onCancel={() => navigate('/users')}
+          onSubmit={handleSubmit}
+        />
+      </div>
     </div>
   )
 }
